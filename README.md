@@ -8,20 +8,15 @@
 
 **推荐 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)，也支持 Codex、Cursor 与 OpenCode。**
 
-[![Use this template](https://img.shields.io/badge/Use_this_template-Create_your_copy-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JCodesMore/ai-website-cloner-template/generate) [![Discord](https://img.shields.io/badge/Join_the_community-Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/hrTSX5yTpB)
-
-<a href="https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a> <a href="https://github.com/JCodesMore/ai-website-cloner-template"><img src="https://img.shields.io/github/stars/JCodesMore/ai-website-cloner-template?style=flat" alt="Stars" /></a>
-
-<br />
-<sub><strong>SPONSORED BY</strong></sub>
-<br /><br />
-<a href="https://www.swiftproxy.net/?ref=JCodesMore"><img src="docs/assets/sponsors/swiftproxy-banner.webp" alt="Swiftproxy residential proxies for inspecting websites from 195+ locations" width="680" /></a>
-<br />
-<sub>用覆盖 195+ 地区的住宅 IP 检查不同区域的页面。注册即可试用，使用优惠码 <code>PROXY90</code> 享受 10% 折扣。 <a href="https://www.swiftproxy.net/?ref=JCodesMore">了解 Swiftproxy →</a></sub>
+[![Use this template](https://img.shields.io/badge/Use_this_template-Create_your_copy-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JCodesMore/ai-website-cloner-template/generate) <a href="https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a>
 
 </div>
 
 ---
+
+## Fork 说明
+
+本项目是 [JCodesMore/ai-website-cloner-template](https://github.com/JCodesMore/ai-website-cloner-template) 的 fork，不是上游官方仓库。原项目使用 Next.js；本仓库在其网站克隆工作流与模板内容的基础上，迁移为 Bun + Hono、htmx、Alpine、Basecoat 与 Tailwind CSS v4。原项目的版权与 MIT License 保持不变。
 
 ## 这是什么
 
@@ -49,7 +44,9 @@ bun run dev
 /clone-website https://example.com
 ```
 
-Codex、Cursor 与 OpenCode 直接读取 `.agents/skills/clone-website/SKILL.md`；Claude Code 通过 `.claude/commands/clone-website.md` 进入同一份工作流。
+Codex、Cursor 与 OpenCode 直接读取 `.agents/skills/`；网站克隆走 `.agents/skills/clone-website/SKILL.md`，栈细节按需读 `htmx4`、`alpine`、`hono`、`kysely`、`zod`、`tailwindcss` 与 `ui-kit`。Claude Code 通过 `.claude/commands/clone-website.md` 进入同一份工作流。
+
+`hono` 与 `tailwindcss` 保持上游原版，模板差异统一记录在 `.agents/skills/README.md`；外部 skill 由 `skills-lock.json` 与 `bun run check:skills` 校验。
 
 ## 技术栈
 

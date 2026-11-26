@@ -41,6 +41,13 @@ docs/research/        页面 brief、资源映射与检查证据
 tests/                bun test 与行为基线
 ```
 
+## 技能
+
+- 先读 `.agents/skills/README.md` 了解可用 skill 与覆盖规则。
+- 网站克隆主流程读 `.agents/skills/clone-website/SKILL.md`；栈细节按需读 `htmx4`、`alpine`、`hono`、`kysely`、`zod`、`tailwindcss`、`ui-kit`。
+- skill 是参考材料，`AGENTS.md` 与当前代码优先；冲突时不要照搬 skill 里的 npm、React/JSX 或数据库假设。
+- `hono` 与 `tailwindcss` 是外部只读快照：不要修改它们的 `SKILL.md`、`GENERATION.md` 或 `references/`；模板差异只写在 `.agents/skills/README.md`，并由 `bun run check:skills` 校验。
+
 ## 页面与 HTML
 
 - 完整页面必须调用 `src/shared/page.ts` 的 `renderPage()`，并显式提供 `cache`。

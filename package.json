@@ -44,6 +44,7 @@
     "smoke": "bun scripts/smoke.mjs",
     "routes": "bun scripts/hono-cli.mjs routes src/app-bun.ts",
     "check:docs": "bun scripts/check-docs.mjs",
+    "check:skills": "bun scripts/check-skills.mjs",
     "ci": "bun scripts/ci.mjs",
     "check": "bun run ci",
     "migrate": "bun scripts/migrate.mjs up",

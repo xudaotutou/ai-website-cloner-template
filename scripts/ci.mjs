@@ -57,6 +57,7 @@ const steps = [
   { name: 'typecheck', run: () => bunRun('typecheck') },
   { name: 'lint', run: () => bunRun('lint') },
   { name: 'check:docs', run: () => bunRun('check:docs') },
+  { name: 'check:skills', run: () => bunRun('check:skills') },
   { name: 'test', run: () => bunRun('test') },
   { name: '生成物一致性', run: generatedConsistency },
   {
