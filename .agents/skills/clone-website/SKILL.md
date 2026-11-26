@@ -7,11 +7,47 @@ description: Rebuild existing web pages as working local code, matching their re
 
 Recreate the supplied pages in the current app. Match the source before adding a new design direction. Deliver working, editable code: screenshots, iframes, and downloaded production bundles are references, not the implementation.
 
+## 本模板的 Hono 实现约定
+
+This template is server-rendered Bun + Hono with htmx, Alpine, Basecoat and Tailwind v4. Do not introduce React, Hono JSX, or a client-side framework. Build HTML with `src/shared/html.ts`; normal interpolation escapes automatically, and only controlled markup may use `raw()`.
+
+- Route ownership: `src/sites/<site>/routes.ts`, `pages/`, `fragments/`, and `components/`; global helpers stay in `src/shared/`.
+- Full pages must call `renderPage()` with an explicit cache choice. Never hand-assemble a second `<html>` document.
+- **HTML fragment**: htmx endpoints return only the changed markup, with the correct status code. Never return a full page from a fragment route.
+- **assetUrl**: every local `/static/` and `/sites/` URL goes through `assetUrl()`. After adding or replacing an asset, run `bun run build` and commit both generated artifacts.
+- **Alpine** owns small local UI state; htmx owns server round-trips. Do not duplicate the same interaction in both.
+- Site CSS belongs in `src/styles/sites/<site>.css`; extracted assets belong in `public/sites/<site>/`.
+
+### 交互分类
+
+Classify each observed interaction before implementing it:
+
+| 交互分类 | 实现方式 |
+| --- | --- |
+| Navigation, form submit, filtering, pagination, partial refresh | htmx request returning an HTML fragment |
+| Menu, tab, dialog, disclosure, local toggle | Alpine state, with accessible markup |
+| Scroll, hover, time, canvas or complex motion | CSS first, or a focused animation library when the source truly needs it |
+
+Preserve what actually drives the change. Never replace scroll-driven behavior with a click imitation.
+
+### 缓存分类
+
+Every route must choose one cache class:
+
+| 缓存分类 | 响应要求 |
+| --- | --- |
+| Public page | `renderPage()` with `cache: { visibility: 'public' }`; shared caching, `Vary: Accept-Encoding`, no cookie |
+| Private page or write | `renderPage()` with private cache, or a fragment route; `no-store`, `Vary: Cookie`, CSRF enforced |
+| Real static file | `bun` server or Workers assets add `public, max-age=31536000, immutable` |
+| Missing static file | 404; never add immutable |
+
+Add tests for cache headers and cookies whenever a route is added or changed.
+
 ## 1. Map the work
 
 Read project instructions, the actual framework/scripts, and existing routes. Open the source URLs with the available browser. Prefer direct HTTP, asset tools, or APIs for extraction when practical; use the browser to establish appearance and behavior.
 
-Record a short source-to-local route map and the files each page owns. Follow the app's conventions; in this template use `src/app/`, `src/components/sites/<site>/`, `public/sites/<site>/`, and `docs/research/<site>/`. Give origins, pages, and downloads distinct names; add a port or URL hash when readable names collide.
+Record a short source-to-local route map and the files each page owns. Follow the app's conventions; in this template use `src/sites/<site>/`, `public/sites/<site>/`, `docs/research/<site>/`, and `src/shared/` for reusable Hono/HTML helpers. Give origins, pages, and downloads distinct names; add a port or URL hash when readable names collide.
 
 - A first root clone may replace the untouched template homepage.
 - Preserve source pathnames for multiple pages from one origin. Query/fragment variations usually represent states of the same route; reproduce those states.
@@ -44,7 +80,7 @@ Build coherent sections with real content. Delegate independent pages/sections a
 
 Recreate in-scope interactions. Preserve real outbound destinations. Rewrite links to local routes when those routes are included; leave out-of-scope destinations pointing to the source and disclose them. Visible controls must perform the behavior they promise.
 
-Run the appropriate project check after an integrated slice. Finish this pass when every requested section/route renders with actual assets and important controls work.
+Run `bun run typecheck`, targeted `bun test`, and `bun run smoke` after an integrated slice. Finish this pass when every requested section/route renders with actual assets and important controls work.
 
 ## 4. Compare, repair, repeat
 
@@ -54,8 +90,8 @@ Fix the largest visible differences first: geometry, missing sections/layers, ty
 
 Exercise the real local workflow: navigation between cloned routes, mobile menu, tab/accordion states, carousel boundaries, primary actions, media controls, and observed scroll-linked transitions. Check runtime errors, missing assets, and horizontal overflow. When adding pages, verify existing routes still work. Use a few browser checks at these boundaries rather than assertions about class names.
 
-Run the project's production check. Completion requires a successful build **and** rendered comparison. State remaining differences precisely instead of calling an unchecked result pixel-perfect.
+Run `bun run check` and the project's production build. Completion requires a successful check **and** rendered comparison. State remaining differences precisely instead of calling an unchecked result pixel-perfect.
 
 ## Deliver
 
-Return preview/run instructions, the source-to-local route map, representative desktop/mobile comparisons, checks actually run, and remaining visual/functional gaps. Keep reference clones in separate apps when maintaining the reusable template.
+Return preview/run instructions, the source-to-local route map, representative desktop/mobile comparisons, checks actually run, and remaining visual/functional gaps. Report the Hono route map, fragment endpoints, cache classification, and `assetUrl` usage. Keep reference clones in separate apps when maintaining the reusable template.

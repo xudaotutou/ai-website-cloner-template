@@ -1,49 +1,57 @@
-# Contributing
+# 贡献指南
 
-Thanks for your interest in improving the **AI Website Cloner Template**! This guide covers how to contribute to the template itself.
+感谢改进 **AI Website Cloner Template**。本仓库是模板；如果你只是想克隆某个网站，请先创建自己的副本，不要向模板仓库提交目标站点的业务代码。
 
-> **Note:** This repository is a *template*. If you just want to clone a website, don't open a PR here — click **Use this template** to make your own copy and work there (see the [README](README.md#quick-start)). Pull requests should improve the template: the `/clone-website` skill, support for the four documented agents, the scaffold, or the docs.
+## 可以贡献什么
 
-## Ways to contribute
+- 改进 `.agents/skills/clone-website/`：抽取方法、交互观察、Bun + Hono 实现与验收标准。
+- 修复 Hono、htmx、Alpine、Basecoat 或 Tailwind 脚手架中的问题。
+- 改进文档、测试、Docker、Workers 或 CI。
+- 增加可复用的缓存、CSRF、HTML 安全或资源版本化实践。
 
-- **Improve the `/clone-website` skill** — sharper extraction, better prompts, new behaviors to detect
-- **Improve agent support** — fixes for Claude Code, Codex, Cursor, or OpenCode
-- **Fix bugs** in the Next.js scaffold
-- **Improve documentation** — the README, `AGENTS.md`, or the skill references
+较大的改动请先开 issue 对齐范围。
 
-Browse the [open issues](https://github.com/JCodesMore/ai-website-cloner-template/issues) for something to pick up. For substantial or potentially breaking changes, consider opening an issue first so we can align on the approach before significant work begins.
+## 开发环境
 
-## Development setup
-
-**Prerequisites:** [Node.js](https://nodejs.org/) 24+.
+需要 Bun 1.4.5 或更新的稳定版。
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/ai-website-cloner-template.git
-cd ai-website-cloner-template
-npm ci
+bun install --frozen-lockfile
+bun run check
 ```
 
-Before opening a PR, make sure the project is green:
+`bun run check` 会依次执行构建、类型检查、ESLint、文档检查、`bun test`、生成物一致性、行为基线与 HTML 冒烟。日常开发可用：
 
 ```bash
-npm run check   # lint + typecheck + build
+bun run dev
+bun test
+bun run smoke
 ```
 
-## Source-of-truth files
+## 源码归属
 
-Project instructions live in `AGENTS.md`. The canonical cloning workflow lives in `.agents/skills/clone-website/` and is read directly by Codex, Cursor, and OpenCode. Claude Code enters through `.claude/commands/clone-website.md`, which must remain a thin bridge rather than a second workflow copy.
+- 项目指令：`AGENTS.md`
+- 规范克隆工作流：`.agents/skills/clone-website/SKILL.md`
+- Claude Code 入口：`.claude/commands/clone-website.md`，必须保持为薄桥接
+- 架构与缓存约定：`docs/ARCHITECTURE.md`
+- jj 工作流：`docs/JJ.md`
+- 已知问题：`docs/ISSUES.md`
 
-Edit the canonical skill and its references directly. There is no generation or synchronization step.
+直接编辑规范技能及其 references，没有生成或同步步骤。
 
-## Submitting a pull request
+## 提交前检查
 
-1. **Fork** the repo and create a branch off `master` (e.g. `fix/skill-hover-extraction` or `docs/clarify-setup`).
-2. Make your focused change in the appropriate source-of-truth file.
-3. Run `npm run check` and make sure it passes.
-4. Write a clear commit message that describes the change. Prefixes such as `fix:`, `feat:`, or `docs:` are welcome but not required.
-5. Open a PR against `master`, fill out the PR template, and link a relevant issue when one exists (for example, `Closes #123`).
-6. Keep PRs focused — one logical change per PR is much easier to review and merge.
+1. 新行为必须有测试；缓存、cookie、CSRF 与静态资源尤其不能只靠目测。
+2. HTML 只能通过 `src/shared/html.ts` 构造；不要用字符串拼接用户输入。
+3. 新资源必须通过 `assetUrl()` 引用，并提交 `public/static/app.css` 与 `src/shared/asset-versions.ts`。
+4. 只有确认行为变更是预期时才运行 `bun run snapshot`。
+5. 运行 `bun run check`，确保全绿。
+6. 保持改动聚焦；不要顺手重命名无关文件或覆盖他人的未完成工作。
 
-## Questions
+## 版本控制
 
-Ask in the [Discord community](https://discord.gg/hrTSX5yTpB) — happy to help you get started.
+仓库使用 jj。用 `jj describe` 写当前变更说明，用 `jj new` 开始下一项工作，用 `jj bookmark` 管理书签。不要创建 git 分支，除非维护者明确要求。详见 `docs/JJ.md`。
+
+## 问题
+
+可以在 [Discord 社区](https://discord.gg/hrTSX5yTpB) 提问。安全问题请按 [SECURITY.md](SECURITY.md) 私下报告。

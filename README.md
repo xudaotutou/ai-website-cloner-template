@@ -2,162 +2,159 @@
 
 # AI Website Cloner Template
 
-### Clone any website with one command
+### 用一条命令克隆网站，交付可维护的 Bun + Hono 代码
 
-Give your AI coding agent a URL and watch it recreate the website as a clean Next.js app.
+给 AI 编码代理一个网址，它会先观察真实页面，再用 Hono、htmx、Alpine、Basecoat 与 Tailwind CSS v4 重建可编辑的本地实现。
 
-**Best results with [Claude Code](https://docs.anthropic.com/en/docs/claude-code) + Opus 5.5. Also supports Codex, Cursor, and OpenCode.**
+**推荐 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)，也支持 Codex、Cursor 与 OpenCode。**
 
 [![Use this template](https://img.shields.io/badge/Use_this_template-Create_your_copy-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JCodesMore/ai-website-cloner-template/generate) [![Discord](https://img.shields.io/badge/Join_the_community-Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/hrTSX5yTpB)
 
-[Quick Start](#quick-start) · [Watch Demo](#demo) · [Supported Platforms](#supported-platforms)
-
-<a href="https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a> <a href="https://github.com/JCodesMore/ai-website-cloner-template"><img src="https://img.shields.io/github/stars/JCodesMore/ai-website-cloner-template?style=flat" alt="Stars" /></a> <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/badges/token-badge.json" alt="tokens" />
-
-  <a href="https://trendshift.io/repositories/24302?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-24302" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/24302" alt="JCodesMore%2Fai-website-cloner-template | Trendshift" width="250" height="55" /></a> <a href="https://www.star-history.com/jcodesmore/ai-website-cloner-template/"><picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=JCodesMore/ai-website-cloner-template&amp;theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=JCodesMore/ai-website-cloner-template" /><img alt="Star History Global Rank" src="https://api.star-history.com/badge?repo=JCodesMore/ai-website-cloner-template" width="216" height="55" /></picture></a>
+<a href="https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a> <a href="https://github.com/JCodesMore/ai-website-cloner-template"><img src="https://img.shields.io/github/stars/JCodesMore/ai-website-cloner-template?style=flat" alt="Stars" /></a>
 
 <br />
 <sub><strong>SPONSORED BY</strong></sub>
 <br /><br />
 <a href="https://www.swiftproxy.net/?ref=JCodesMore"><img src="docs/assets/sponsors/swiftproxy-banner.webp" alt="Swiftproxy residential proxies for inspecting websites from 195+ locations" width="680" /></a>
 <br />
-<sub>Inspect and compare websites from any region with rotating or static residential IPs in 195+ locations, over HTTP(S) and SOCKS5. Free testing, plus 10% off with code <code>PROXY90</code>. <a href="https://www.swiftproxy.net/?ref=JCodesMore">Try&nbsp;Swiftproxy&nbsp;→</a></sub>
+<sub>用覆盖 195+ 地区的住宅 IP 检查不同区域的页面。注册即可试用，使用优惠码 <code>PROXY90</code> 享受 10% 折扣。 <a href="https://www.swiftproxy.net/?ref=JCodesMore">了解 Swiftproxy →</a></sub>
 
 </div>
 
 ---
 
-## Demo
+## 这是什么
 
-[![Watch the demo](docs/design-references/comparison.png)](https://youtu.be/O669pVZ_qr0)
+这是一个面向 AI 编码代理的网站逆向工程模板。它不生成截图或 iframe 假页面，而是要求代理提取真实文案、字体、图片与行为，用可读的服务端 HTML 和少量 Alpine/htmx 交互重建页面。
 
-> Click the image above to watch the full demo on YouTube.
+模板只保留两个部署出口：
 
-## Quick Start
+- `src/index.ts`：Bun 原生服务器，供本地、Docker 和常规 VPS 使用。
+- `src/worker.ts`：Cloudflare Workers 入口，静态文件由 assets binding 提供。
 
-### 1. Set up your project
+`src/app-bun.ts` 只是共享的 Hono 应用实例，供 Bun 入口与 Hono CLI 复用，不是第三个部署出口。
 
-**Recommended: ask your agent.** Paste this into Codex, Claude Code, or your coding agent:
+## 快速开始
 
-```text
-Set up https://github.com/JCodesMore/ai-website-cloner-template
-as a standalone project in a new folder on my computer.
-Ask me where to put it. Clone the repository, remove its origin remote,
-install dependencies, and run npm run check. Leave it ready for me
-to clone a website.
+前置条件：Bun 1.4.5 或更新的稳定版，以及一个能访问浏览器的编码代理。
+
+```bash
+bun install --frozen-lockfile
+bun run dev
 ```
 
-**Or create your own GitHub repository:**
-
-[![Use this template](https://img.shields.io/badge/Use_this_template-Create_your_copy-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JCodesMore/ai-website-cloner-template/generate)
-
-Give it a name and click **Create repository**. Then give your agent the new repository's link and ask it to clone it onto your computer, install dependencies, and run `npm run check`.
-
-### 2. Clone a website
-
-Open the project in your agent with browser access enabled. In Claude Code or Cursor, run:
+打开 `http://localhost:3000`，然后让代理执行：
 
 ```text
 /clone-website https://example.com
 ```
 
-Replace the URL with the website you want to recreate. Once it's built, ask your agent for any changes you want.
+Codex、Cursor 与 OpenCode 直接读取 `.agents/skills/clone-website/SKILL.md`；Claude Code 通过 `.claude/commands/clone-website.md` 进入同一份工作流。
 
-## Supported Platforms
+## 技术栈
 
-| Agent                                                         | Status                     |
-| ------------------------------------------------------------- | -------------------------- |
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | **Recommended** — Opus 5.5 |
-| [Codex CLI](https://github.com/openai/codex)                  | Supported                  |
-| [OpenCode](https://opencode.ai/)                              | Supported                  |
-| [Cursor](https://cursor.com/)                                 | Supported                  |
+- **运行时**：Bun 1.4.5，`Bun.serve()` 与 `Bun.file()`
+- **服务端**：Hono 4，类型安全的中间件与路由
+- **页面**：服务端 HTML、htmx 4、Alpine 3、Basecoat 组件类
+- **样式**：Tailwind CSS v4，构建到 `public/static/app.css`
+- **数据**：Kysely + pg；测试使用进程内 PGlite，生产数据库始终可选
+- **质量**：TypeScript strict、ESLint 10、`bun test`、行为基线与 HTML 冒烟
 
-## Prerequisites
+## 项目结构
 
-- [Node.js](https://nodejs.org/) 24+
-- An AI coding agent (see [Supported Platforms](#supported-platforms))
-
-## Tech Stack
-
-- **Next.js 16** — App Router, React 19, TypeScript strict
-- **shadcn/ui** — Base UI primitives + Tailwind CSS v4
-- **Tailwind CSS v4** — oklch design tokens
-- **Lucide React** — default icons (replaced by extracted SVGs during cloning)
-
-## How It Works
-
-The `/clone-website` skill follows four steps:
-
-1. **Map** — map source URLs to local routes and preserve existing work.
-2. **Observe** — inspect desktop/mobile pages, extract real assets and fonts, and exercise alternate states.
-3. **Build** — implement editable components and working interactions; delegate independent sections when useful.
-4. **Compare** — review source and local pages at matched sizes/states, repair visible differences, and run the production check.
-
-Framer pages and animated sites have focused inspection guidance for responsive variants, media, sticky scenes, and scroll/time-driven motion. Direct HTTP or asset tools handle extraction where practical; browser comparisons establish appearance and behavior. Deliverables include route mappings, run instructions, comparison screenshots, and any remaining gaps.
-
-## Use Cases
-
-- **Platform migration** — rebuild a site you own from WordPress/Webflow/Squarespace into a modern Next.js codebase
-- **Lost source code** — your site is live but the repo is gone, the developer left, or the stack is legacy. Get the code back in a modern format
-- **Learning** — deconstruct how production sites achieve specific layouts, animations, and responsive behavior by working with real code
-
-## Not Intended For
-
-- **Phishing or impersonation** — this project must not be used for deceptive purposes, impersonation, or any activity that breaks the law.
-- **Passing off someone's design as your own** — logos, brand assets, and original copy belong to their owners.
-- **Violating terms of service** — some sites explicitly prohibit scraping or reproduction. Check first.
-
-## Project Structure
-
-```
+```text
 src/
-  app/              # Next.js routes
-  components/       # React components
-    ui/             # shadcn/ui primitives
-    sites/<site>/   # Source-specific components and extracted SVGs
-  lib/utils.ts      # cn() utility
-  types/            # TypeScript interfaces
-  hooks/            # Custom React hooks
+  index.ts                 # Bun 部署入口
+  worker.ts                # Cloudflare Workers 部署入口
+  app-bun.ts               # 共享 Hono 应用实例
+  app.ts                   # createApp() 装配与中间件顺序
+  sites/<site>/
+    index.ts               # SiteModule：应用与 sitemap
+    routes.ts              # 完整页面和 fragment 路由
+    pages/                 # 完整页面 HTML
+    fragments/             # htmx 返回的 HTML fragment
+    components/            # 站点内可复用片段
+  shared/                  # HTML、缓存、CSRF、会话、SEO、静态资源
+  styles/                  # Tailwind 入口与站点样式
 public/
-  sites/<site>/     # Source-specific images, fonts, videos, and other assets
+  static/                  # htmx、Alpine、字体与构建后的 CSS
+  sites/<site>/            # 来源站点图片、SVG、视频等
 docs/
-  research/<site>/  # Page brief, asset map, and inspection evidence
-  design-references/ # Screenshots
-.agents/skills/
-  clone-website/    # Canonical skill and inspection reference
-.claude/commands/
-  clone-website.md  # Thin Claude Code bridge
-AGENTS.md           # Agent instructions (single source of truth)
-CLAUDE.md           # Claude Code config (imports AGENTS.md)
+  research/<site>/         # 页面 brief、资源映射与检查证据
+  design-references/       # 对比截图
+tests/                     # bun test、行为基线
+scripts/                   # 构建、检查、迁移与冒烟脚本
 ```
 
-## Commands
+## 常用命令
+
+| 命令 | 作用 |
+| --- | --- |
+| `bun run dev` | 以 watch 模式启动 `src/index.ts` |
+| `bun run start` | 启动生产入口 |
+| `bun run build` | 构建 Tailwind CSS 并刷新资源哈希 |
+| `bun run typecheck` | 执行 `bun check --no-script` |
+| `bun run lint` | 执行 ESLint |
+| `bun test` | 运行应用与 PGlite 测试 |
+| `bun run snapshot` | 重新生成 `tests/baseline.jsonl` |
+| `bun run smoke` | 解析真实 HTML 并请求全部静态资源 |
+| `bun run routes` | 用 Hono CLI 展开 `src/app-bun.ts` 的真实路由 |
+| `bun run check` | 完整 CI：构建、类型、lint、文档、测试、基线、冒烟 |
+| `bun run bundle:worker` | 用 Wrangler dry-run 验证 Workers 产物 |
+
+`public/static/app.css` 与 `src/shared/asset-versions.ts` 是生成物，但必须提交。CI 会重新构建并检查它们是否漂移。
+
+## 页面与缓存约定
+
+每个完整页面都必须通过 `renderPage()` 输出，并显式选择缓存分类：
+
+- `public`：可共享缓存，设置 `Vary: Accept-Encoding`，绝不写 cookie。
+- `private`：`no-store`、`Vary: Cookie`，确保匿名会话并注入 CSRF token。
+
+htmx 路由返回 HTML fragment，不输出完整文档。读操作可公开缓存；写操作必须经过 CSRF 校验并返回 `no-store`。所有站内图片、脚本、字体与样式都必须通过 `assetUrl()` 引用，URL 会带内容哈希。
+
+## 两个部署出口
+
+### Bun
 
 ```bash
-npm run dev    # Start dev server
-npm run build  # Production build
-npm run lint   # ESLint check
-npm run typecheck # TypeScript check
-npm run check  # Run lint + typecheck + build
+bun run build
+bun run start
 ```
 
-### If using docker
+`Bun.serve()` 读取 `PORT`（默认 `3000`）与 `HOSTNAME`（默认 `0.0.0.0`），并在 SIGINT/SIGTERM 时优雅停止。`/static/*` 与 `/sites/*` 由 Bun 文件服务读取；只有真实存在的文件才获得 `public, max-age=31536000, immutable`。
+
+### Cloudflare Workers
 
 ```bash
-docker compose up app --build # build and run the app
-docker compose up dev --build # run the app in dev mode on port 3001
+bun run bundle:worker
+bun run deploy:worker
 ```
 
-## Agent Support
+`wrangler.jsonc` 指向 `src/worker.ts`，并把 `public/` 作为静态资源目录。Worker 使用 `createApp({ static: 'none' })`，HTML 仍由同一份 Hono 应用生成。
 
-The project keeps one portable Agent Skill at `.agents/skills/clone-website/`. Codex, Cursor, and OpenCode read it directly. Claude Code uses the small command bridge at `.claude/commands/clone-website.md` so `/clone-website` and its arguments continue to work without exposing a duplicate skill to the other agents.
+### Docker
 
-## Star History
+```bash
+bun run secret:gen -- --file .env
+docker compose up app --build
+docker compose up dev --build
+```
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/charts/star-history-dark.svg" />
-  <img alt="Star History Chart" src="https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/charts/star-history.svg" />
-</picture>
+生产模式拒绝开发默认密钥，因此 `app` 需要至少 32 字符的 `SESSION_SECRET`。上面的命令会把它写入被忽略的 `.env`，再由 compose 注入容器。生产镜像基于 `oven/bun:1.4.5-slim` 多阶段构建；开发服务挂载源码并运行 watch 模式。
+
+## 安全与合规
+
+- 所有 HTML 通过 `src/shared/html.ts` 构造，默认转义，只有显式 `raw()` 才允许原样输出。
+- 写请求校验 Origin、Sec-Fetch-Site 与每会话 CSRF token。
+- 公开页与私有页的缓存策略是类型约束，而不是口头约定。
+- 只克隆你有权迁移、恢复或学习的网站。不要用于钓鱼、冒充或违反目标站点条款。
+
+安全报告方式见 [SECURITY.md](SECURITY.md)。
+
+## 贡献
+
+模板自身的问题与改进请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。如果只是想克隆一个网站，请先创建自己的副本。
 
 ## License
 

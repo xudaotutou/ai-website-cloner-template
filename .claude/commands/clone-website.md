@@ -1,5 +1,5 @@
 ---
-description: Rebuild one or more websites as working Next.js pages matching their content, assets, responsive layout, and interactions. Use for website cloning, replication, or reverse engineering.
+description: Rebuild one or more websites as working Bun + Hono pages with htmx, Alpine, Basecoat and Tailwind.
 argument-hint: "<url1> [<url2> ...]"
 ---
 

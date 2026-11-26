@@ -16,4 +16,4 @@
 
 ## Checklist
 
-- [ ] `npm run check` passes (lint + typecheck + build)
+- [ ] `bun run check` passes (build + typecheck + lint + tests + smoke)

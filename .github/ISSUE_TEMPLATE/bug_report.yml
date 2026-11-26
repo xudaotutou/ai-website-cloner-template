@@ -64,11 +64,11 @@ body:
       required: true
 
   - type: input
-    id: node-version
+    id: bun-version
     attributes:
-      label: Node.js Version
-      description: Run `node -v` to find this.
-      placeholder: v24.x.x
+      label: Bun Version
+      description: Run `bun --version` to find this.
+      placeholder: 1.4.5
     validations:
       required: true
 
